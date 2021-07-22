@@ -56,6 +56,8 @@ N_vs_S<-pmap(list(Isho_N_res,Isho_S_res,train_test),function(x,y,z) {roc.test(pR
                                                                               pROC::roc(z[[2]]$case_control,as.numeric(y)))$p.value})
 mean(unlist(N_vs_S))
 sd(unlist(N_vs_S))
+#proportion which are less than 0.05
+mean(unlist(N_vs_S)<.05)
 #for two best biomarker - RBD IgG & Spike IgG
 dat<-dat_Isho %>% dplyr::select(case_control=case_control,rbd_rob_igg, spike_rob_igg) %>%  mutate(case_control=as.numeric(case_control)) %>% filter_all(~.!="n.a.")
 train_test<-1:niter %>% purrr::map(~make_data(dat))
@@ -65,6 +67,8 @@ S_vs_2<-pmap(list(Isho_S_res,Isho_best_2,train_test),function(x,y,z) {roc.test(p
                                                                                pROC::roc(z[[2]]$case_control,as.numeric(y)))$p.value})
 mean(unlist(S_vs_2))
 sd(unlist(S_vs_2))
+#proportion which are less than 0.05
+mean(unlist(S_vs_2)<.05)
 # Best three biomarkers
 dat<-dat_Isho %>% dplyr::select(case_control=case_control,spike_rob_igm, spike_rob_igg, rbd_rob_igg) %>%  mutate(case_control=as.numeric(case_control)) %>% filter_all(~.!="n.a.")
 train_test<-1:niter %>% purrr::map(~make_data(dat))
@@ -74,7 +78,8 @@ Isho_2_vs_3<-pmap(list(Isho_best_2,Isho_best_3,train_test),function(x,y,z) {roc.
                                                                                      pROC::roc(z[[2]]$case_control,as.numeric(y)))$p.value})
 mean(unlist(Isho_2_vs_3))
 sd(unlist(Isho_2_vs_3))
-
+#proportion which are less than 0.05
+mean(unlist(Isho_2_vs_3)<.05)
 ### Peluso data set
 dat<-dat_Peluso %>% dplyr::select(case_control=case_control,N.full._Lum,N.frag._Lum,RBD_Lum, S_Lum) %>%
   mutate(case_control=as.numeric(case_control)) %>% filter_all(~.!="n.a.")
@@ -98,16 +103,22 @@ P_R_vs_S<-pmap(list(Pelu_R_res,Pelu_S_res,train_test),function(x,y,z) {roc.test(
                                                                                 pROC::roc(z[[2]]$case_control,as.numeric(y)))$p.value})
 mean(unlist(P_R_vs_S))
 sd(unlist(P_R_vs_S))
+#proportion which are less than 0.05
+mean(unlist(P_R_vs_S)<.05)
 #Spike vs NP
 P_N_vs_S<-pmap(list(Pelu_N_res,Pelu_S_res,train_test),function(x,y,z) {roc.test(pROC::roc(z[[2]]$case_control,as.numeric(x)),
                                                                                 pROC::roc(z[[2]]$case_control,as.numeric(y)))$p.value})
 mean(unlist(P_N_vs_S))
 sd(unlist(P_N_vs_S))
+#proportion which are less than 0.05
+mean(unlist(P_N_vs_S)<.05)
 #RBD vs NP
 P_R_vs_N<-pmap(list(Pelu_R_res,Pelu_N_res,train_test),function(x,y,z) {roc.test(pROC::roc(z[[2]]$case_control,as.numeric(x)),
                                                                                 pROC::roc(z[[2]]$case_control,as.numeric(y)))$p.value})
 mean(unlist(P_R_vs_N))
 sd(unlist(P_R_vs_N))
+#proportion which are less than 0.05
+mean(unlist(P_R_vs_N)<.05)
 #for two - RBD & Spike
 dat=dat_Peluso %>% dplyr::select(case_control=case_control,RBD_Lum, S_Lum) %>%  mutate(case_control=as.numeric(case_control)) %>% filter_all(~.!="n.a.")
 train_test=1:niter %>% purrr::map(~make_data(dat))
@@ -118,15 +129,15 @@ Pelu_best_2=train_test %>% purrr::map(~Cross_val(.[[1]],.[[2]],nvars=2,ntrees=10
 P_S_vs_2=pmap(list(Pelu_best_1,Pelu_best_2,train_test),function(x,y,z) {roc.test(pROC::roc(z[[2]]$case_control,as.numeric(x)),pROC::roc(z[[2]]$case_control,as.numeric(y)))$p.value})
 mean(unlist(P_S_vs_2))
 sd(unlist(P_S_vs_2))
-
+#proportion which are less than 0.05
+mean(unlist(P_S_vs_2)<.05)
 #RBD vs best two
 P_R_vs_2=pmap(list(Pelu_R_res,Pelu_best_2,train_test),function(x,y,z) {roc.test(pROC::roc(z[[2]]$case_control,as.numeric(x)),pROC::roc(z[[2]]$case_control,as.numeric(y)))$p.vlaue})
 mean(unlist(P_R_vs_2))
 sd(unlist(P_R_vs_2))
-#NP vs best two
-P_N_vs_2=pmap(list(Pelu_N_res,Pelu_best_2,train_test),function(x,y,z) {roc.test(pROC::roc(z[[2]]$case_control,as.numeric(x)),pROC::roc(z[[2]]$case_control,as.numeric(y)))$p.value})
-mean(unlist(P_N_vs_2))
-sd(unlist(P_N_vs_2))
+#proportion which are less than 0.05
+mean(unlist(P_R_vs_2)<.05)
+
 #Best 3
 dat=dat_Peluso %>% dplyr::select(case_control=case_control,RBD_Lum, S_Lum,N.full._Lum) %>%  mutate(case_control=as.numeric(case_control)) %>% filter_all(~.!="n.a.")
 train_test=1:niter %>% purrr::map(~make_data(dat))
@@ -136,6 +147,8 @@ P_2_vs_3<-pmap(list(Pelu_best_2,Pelu_best_3,train_test),function(x,y,z) {roc.tes
                                                                                   pROC::roc(z[[2]]$case_control,as.numeric(y)))$p.value})
 mean(unlist(P_2_vs_3))
 sd(unlist(P_2_vs_3))
+#proportion which are less than 0.05
+mean(unlist(P_2_vs_3)<.05)
 ####
 dat=dat_Whitcombe %>%dplyr::select(case_control=case_control,ends_with("IgA"), ends_with("IgG"), ends_with("IgM")) %>% mutate(case_control=as.numeric(case_control))
 #Signle biomarker
@@ -157,11 +170,15 @@ W_S_vs_N<-pmap(list(W_R_res,W_N_res,train_test),function(x,y,z) {roc.test(pROC::
                                                                           pROC::roc(z[[2]]$case_control,as.numeric(y)))$p.value})
 mean(unlist(W_S_vs_N))
 sd(unlist(W_S_vs_N))
+#proportion which are less than 0.05
+mean(unlist(W_S_vs_N)<.05)
 #RBD vs NP
 W_R_vs_N<-pmap(list(W_R_res,W_N_res,train_test),function(x,y,z) {roc.test(pROC::roc(z[[2]]$case_control,as.numeric(x)),
                                                                           pROC::roc(z[[2]]$case_control,as.numeric(y)))$p.value})
 mean(unlist(W_R_vs_N))
 sd(unlist(W_R_vs_N))
+#proportion which are less than 0.05
+mean(unlist(W_R_vs_N)<.05)
 #best two
 dat=dat_Whitcombe %>%dplyr::select(case_control=case_control,NP_IgA, RBD_IgA) %>% mutate(case_control=as.numeric(case_control))
 train_test=1:niter %>% purrr::map(~make_data(dat))
@@ -176,11 +193,15 @@ W_S_vs_2<-pmap(list(W_best_2,W_S_res,train_test),function(x,y,z) {roc.test(pROC:
                                                                            pROC::roc(z[[2]]$case_control,as.numeric(y)))$p.value})
 mean(unlist(W_S_vs_2))
 sd(unlist(W_S_vs_2))
+#proportion which are less than 0.05
+mean(unlist(W_S_vs_2)<.05)
 #best 2 vs 3
 W_2_vs_3<-pmap(list(W_best_2,W_best_3,train_test),function(x,y,z) {roc.test(pROC::roc(z[[2]]$case_control,as.numeric(x)),
                                                                             pROC::roc(z[[2]]$case_control,as.numeric(y)))$p.value})
 mean(unlist(W_2_vs_3))
 sd(unlist(W_2_vs_3))
+#proportion which are less than 0.05
+mean(unlist(W_2_vs_3)<.05)
 ##Markman
 dat=dat_Markmann %>% dplyr::select(case_control=case_control, RBD_.IgM,RBD_IgA, RBD_tot_Ig, RBD_IgG,NP_IgG,S1..N.terminal.domain.Ig.P.N)  %>% filter_all(~.!='n.a.')
 #Single biomrker
@@ -201,10 +222,14 @@ M_R_vs_N<-pmap(list(M_R_res,M_N_res,train_test),function(x,y,z) {roc.test(pROC::
                                                                           pROC::roc(z[[2]]$case_control,as.numeric(y)))$p.value})
 mean(unlist(M_R_vs_N))
 sd(unlist(M_R_vs_N))
+#proportion which are less than 0.05
+mean(unlist(M_R_vs_N)<.05)
 #RBD vs two best marker
 M_S_vs_2<-pmap(list(M_R_res,M_best_2,train_test),function(x,y,z) {roc.test(pROC::roc(z[[2]]$case_control,as.numeric(x)),
                                                                            pROC::roc(z[[2]]$case_control,as.numeric(y)))$p.value})
 mean(unlist(M_S_vs_2))
 sd(unlist(M_S_vs_2))
+#proportion which are less than 0.05
+mean(unlist(M_S_vs_2)<.05)
 
 
